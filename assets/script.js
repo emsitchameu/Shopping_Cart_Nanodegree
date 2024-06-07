@@ -25,6 +25,8 @@ const products = [
   },
 ];
 
+// Add more fruits here
+
 // Declare an empty array named cart to hold the items in the cart
 let cart = [];
 

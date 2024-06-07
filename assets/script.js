@@ -1,7 +1,4 @@
-// Create an array named products which you will use to add all of your product object literals that you create in the next step.
 const products = [
-  // Create 3 or more product objects using object literal notation
-  // Each product should include five properties
   {
     name: "Carton of Cherry",
     price: 1.99,
@@ -27,6 +24,7 @@ const products = [
 
 // Declare an empty array named cart to hold the items in the cart
 let cart = [];
+let totalPaid = 0;
 
 // Currency settings
 let currentCurrency = "USD";
@@ -49,35 +47,32 @@ function formatPrice(price) {
 
 // Create a function named addProductToCart that takes in the product productId as an argument
 function addProductToCart(productId) {
-  // get the correct product based on the productId
   const product = products.find((p) => p.productId === productId);
 
-  // if the product is not already in the cart, add it to the cart
   if (!cart.find((item) => item.productId === productId)) {
     cart.push({ ...product, quantity: 1 });
   } else {
-    // if product is already in the cart, increase the product's quantity
     cart = cart.map((item) =>
       item.productId === productId
         ? { ...item, quantity: item.quantity + 1 }
         : item
     );
   }
+  renderCart();
 }
 
 // Create a function named increaseQuantity that takes in the productId as an argument
 function increaseQuantity(productId) {
-  // get the correct product based on the productId
   cart = cart.map((item) =>
     item.productId === productId
       ? { ...item, quantity: item.quantity + 1 }
       : item
   );
+  renderCart();
 }
 
 // Create a function named decreaseQuantity that takes in the productId as an argument
 function decreaseQuantity(productId) {
-  // get the correct product based on the productId
   cart = cart
     .map((item) =>
       item.productId === productId
@@ -85,32 +80,48 @@ function decreaseQuantity(productId) {
         : item
     )
     .filter((item) => item.quantity > 0);
+  renderCart();
 }
 
 // Create a function named removeProductFromCart that takes in the productId as an argument
 function removeProductFromCart(productId) {
-  // get the correct product based on the productId and update the product quantity to 0
   cart = cart.filter((item) => item.productId !== productId);
+  renderCart();
 }
 
 // Create a function named cartTotal that has no parameters
 function cartTotal() {
-  // iterate through the cart to get the total cost of all products and return the total cost of the products in the cart
   return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 }
 
 // Create a function called emptyCart that empties the products from the cart
 function emptyCart() {
   cart = [];
+  renderCart();
 }
 
 // Create a function named pay that takes in an amount as an argument
 function pay(amount) {
-  // amount is the money paid by customer
-  // pay will return a negative number if there is a remaining balance
-  // pay will return a positive number if money should be returned to customer
+  totalPaid += amount;
+
   const total = cartTotal();
-  return amount - total;
+  let remaining = totalPaid - total;
+
+  if (remaining >= 0) {
+    totalPaid = 0;
+    emptyCart();
+  }
+
+  renderPaySummary();
+  return remaining;
+}
+
+// Function to render the pay summary
+function renderPaySummary() {
+  const paySummaryContainer = document.querySelector(".pay-summary");
+  paySummaryContainer.innerHTML = `Total Paid: ${formatPrice(
+    totalPaid
+  )} | Remaining Balance: ${formatPrice(cartTotal() - totalPaid)}`;
 }
 
 // Function to switch currency
@@ -164,6 +175,7 @@ function renderCart() {
 
   const cartTotalContainer = document.querySelector(".cart-total");
   cartTotalContainer.innerHTML = `Total: ${formatPrice(cartTotal())}`;
+  renderPaySummary();
 }
 
 // Event listener for currency switcher

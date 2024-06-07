@@ -15,13 +15,22 @@
 <body>
     <div class="shopping-cart">
         <h1>Kirana's Fruit Stand</h1>
-        <div class="currency-selector"></div>
+        <div class="currency-selector">
+            <label for="currency">Select Currency:</label>
+            <select id="currency" name="currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="YEN">YEN</option>
+            </select>
+        </div>
         <div class="cart-container">
             <div class="products-container">
                 <h2>Products</h2>
                 <div class="products"></div>
                 <h2>Your Shopping Cart</h2>
-                <div class="empty-btn"></div>
+                <div class="empty-btn">
+                    <button onclick="emptyCart()">Empty Cart</button>
+                </div>
                 <div class="cart"></div>
             </div>
             <div class="checkout-container">
